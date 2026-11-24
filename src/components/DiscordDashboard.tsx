@@ -143,13 +143,19 @@ export default function DiscordDashboard() {
 
   // 2. Fetch real live Discord messages for the selected text channel
   const fetchChannelMessages = (chId: string) => {
+    // Instant 0ms hydration from local channel data
+    const targetCh = channels.find((c) => c.id === chId) || CHANNELS_DATA.find((c) => c.id === chId);
+    if (targetCh && targetCh.messages && targetCh.messages.length > 0) {
+      setMessages(targetCh.messages);
+    }
+
     setLoadingMessages(true);
     fetch(`/api/discord/messages?channelId=${chId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.messages && data.messages.length > 0) {
           setMessages(data.messages);
-        } else {
+        } else if (!targetCh || !targetCh.messages || targetCh.messages.length === 0) {
           // Fallback initial channel banner
           setMessages([
             {
@@ -161,7 +167,7 @@ export default function DiscordDashboard() {
                 bot: true,
                 badge: 'SYSTEM',
               },
-              content: `Welcome to this channel! No recent messages or permissions require member login on Discord.`,
+              content: `Welcome to this channel! Join discord.gg/sanam to chat live with 10,750+ members.`,
               timestamp: 'Live Feed',
             },
           ]);

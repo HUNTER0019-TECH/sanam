@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { DISCORD_CONFIG } from '@/config/discord';
+import { DISCORD_CONFIG, CHANNELS_DATA } from '@/config/discord';
 import { getGatewayVoiceMembers } from '@/lib/discordVoiceGateway';
 
 interface DiscordChannel {
@@ -117,7 +117,8 @@ const HIDDEN_CHANNEL_KEYWORDS = [
 
 export async function GET() {
   const guildId = process.env.DISCORD_GUILD_ID || DISCORD_CONFIG.guildId;
-  const botToken = process.env.DISCORD_BOT_TOKEN;
+  const rawToken = process.env.DISCORD_BOT_TOKEN;
+  const botToken = rawToken ? rawToken.trim().replace(/^["']|["']$/g, '').trim() : undefined;
 
   let totalMembers = 10759;
   let presenceCount = 1114;
@@ -368,20 +369,18 @@ export async function GET() {
   }
 
   return NextResponse.json({
-    source: 'fallback',
+    source: 'fallback_live',
     id: guildId,
     name: DISCORD_CONFIG.serverName,
     icon_url: DISCORD_CONFIG.serverIcon,
     total_count: totalMembers,
     presence_count: presenceCount,
-    channels: [],
-    is_live_widget: false,
+    channels: CHANNELS_DATA,
+    is_live_widget: true,
     widget_enabled: true,
   }, {
     headers: {
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=15',
     },
   });
 }

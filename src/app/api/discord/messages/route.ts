@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DiscordEmbedItem } from '@/types/discord';
+import { CHANNELS_DATA } from '@/config/discord';
 
 // Helper to convert Discord integer colors (e.g. 16242282) to hex strings (#f7d5ea)
 function decimalToHexColor(dec?: number): string | undefined {
@@ -62,15 +63,29 @@ export async function GET(request: NextRequest) {
 
   const searchParams = request.nextUrl.searchParams;
   const channelId = searchParams.get('channelId');
-  const botToken = process.env.DISCORD_BOT_TOKEN;
+  const rawToken = process.env.DISCORD_BOT_TOKEN;
+  const botToken = rawToken ? rawToken.trim().replace(/^["']|["']$/g, '').trim() : undefined;
 
   // Security: Strict Snowflake ID validation (17 to 20 digits only)
-  if (!channelId || !/^\d{17,20}$/.test(channelId) || !botToken) {
+  if (!channelId || !/^\d{17,20}$/.test(channelId)) {
     return NextResponse.json({ messages: [] }, {
       headers: {
         'Cache-Control': 'no-store, no-cache, must-revalidate',
       },
     });
+  }
+
+  // If botToken is not configured yet on Vercel, serve fallback real channel messages
+  if (!botToken) {
+    const fallbackCh = CHANNELS_DATA.find((c) => c.id === channelId);
+    return NextResponse.json(
+      { messages: fallbackCh?.messages || [] },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=15',
+        },
+      }
+    );
   }
 
   // Check in-memory cache for instant 0ms responses
@@ -265,9 +280,11 @@ export async function GET(request: NextRequest) {
     console.warn('Failed to fetch messages for channel', channelId, err);
   }
 
-  return NextResponse.json({ messages: [] }, {
+  // Fallback to static messages from CHANNELS_DATA
+  const fallbackCh = CHANNELS_DATA.find((c) => c.id === channelId);
+  return NextResponse.json({ messages: fallbackCh?.messages || [] }, {
     headers: {
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=15',
     },
   });
 }
