@@ -142,43 +142,48 @@ export default function DiscordDashboard() {
   }, []);
 
   // 2. Fetch real live Discord messages for the selected text channel
-  const fetchChannelMessages = (chId: string) => {
-    // Instant 0ms hydration from local channel data
-    const targetCh = channels.find((c) => c.id === chId) || CHANNELS_DATA.find((c) => c.id === chId);
-    if (targetCh && targetCh.messages && targetCh.messages.length > 0) {
-      setMessages(targetCh.messages);
+  const fetchChannelMessages = (chId: string, isInitial = false) => {
+    // Only hydrate from static channel on initial channel switch
+    if (isInitial) {
+      const targetCh = channels.find((c) => c.id === chId) || CHANNELS_DATA.find((c) => c.id === chId);
+      if (targetCh && targetCh.messages && targetCh.messages.length > 0) {
+        setMessages(targetCh.messages);
+      }
+      setLoadingMessages(true);
     }
 
-    setLoadingMessages(true);
     fetch(`/api/discord/messages?channelId=${chId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.messages && data.messages.length > 0) {
           setMessages(data.messages);
-        } else if (!targetCh || !targetCh.messages || targetCh.messages.length === 0) {
-          // Fallback initial channel banner
-          setMessages([
-            {
-              id: `init-${chId}`,
-              author: {
-                name: 'SANAM Bot',
-                avatar: '/sanam-logo.png',
-                roleColor: '#FF6A00',
-                bot: true,
-                badge: 'SYSTEM',
+        } else if (isInitial) {
+          const targetCh = channels.find((c) => c.id === chId) || CHANNELS_DATA.find((c) => c.id === chId);
+          if (!targetCh || !targetCh.messages || targetCh.messages.length === 0) {
+            setMessages([
+              {
+                id: `init-${chId}`,
+                author: {
+                  name: 'SANAM Bot',
+                  avatar: '/sanam-logo.png',
+                  roleColor: '#FF6A00',
+                  bot: true,
+                  badge: 'SYSTEM',
+                },
+                content: `Welcome to this channel! Join discord.gg/sanam to chat live with 10,750+ members.`,
+                timestamp: 'Live Feed',
               },
-              content: `Welcome to this channel! Join discord.gg/sanam to chat live with 10,750+ members.`,
-              timestamp: 'Live Feed',
-            },
-          ]);
+            ]);
+          }
         }
         setLoadingMessages(false);
-        // Scroll to bottom
-        setTimeout(() => {
-          if (chatScrollRef.current) {
-            chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-          }
-        }, 100);
+        if (isInitial) {
+          setTimeout(() => {
+            if (chatScrollRef.current) {
+              chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+            }
+          }, 100);
+        }
       })
       .catch(() => {
         setLoadingMessages(false);
@@ -188,12 +193,12 @@ export default function DiscordDashboard() {
   useEffect(() => {
     const current = channels.find((c) => c.id === selectedChannelId);
     if (current && current.type !== 'voice') {
-      fetchChannelMessages(selectedChannelId);
+      fetchChannelMessages(selectedChannelId, true);
 
-      // Auto poll every 6 seconds for new messages
+      // Auto poll every 3 seconds for new live chat messages
       const interval = setInterval(() => {
-        fetchChannelMessages(selectedChannelId);
-      }, 6000);
+        fetchChannelMessages(selectedChannelId, false);
+      }, 3000);
 
       return () => clearInterval(interval);
     }
@@ -209,6 +214,7 @@ export default function DiscordDashboard() {
       sounds.playVoiceJoin();
     } else {
       sounds.playChannelSwitch();
+      fetchChannelMessages(channel.id, true);
     }
   };
 
