@@ -166,10 +166,10 @@ export default function ShopPage() {
         period: 'Only INR / LTC Accepted',
       },
       features: [
-        'Tier 1 (3 Days Promo) — 2x @everyone + 3x @here, Greet, Nitro Givy & Support server promo (₹1,300 / 14$ LTC)',
-        'Tier 2 (36 Hours Promo) — @everyone + 2x extra @here, Greet, Nitro Givy & Support promo (₹999 / 11$ LTC)',
-        'Tier 3 (1 Day Promo) — @everyone + extra @here / Greet, Nitro Givy & Support promo (₹650 / 7$ LTC)',
-        'Tier 4 (1 Day Promo) — @everyone, Nitro Givy & Promo in our support server (₹400 / 4.5$ LTC)',
+        'Tier 1 (3 Days Promo) — 2x @everyone + 3x @here, Greet, Nitro Givy & Support server promo (₹2,199 / 14$ LTC)',
+        'Tier 2 (36 Hours Promo) — @everyone + 2x extra @here, Greet, Nitro Givy & Support promo (₹1,799 / 11$ LTC)',
+        'Tier 3 (1 Day Promo) — @everyone + extra @here / Greet, Nitro Givy & Support promo (₹1,199 / 7$ LTC)',
+        'Tier 4 (1 Day Promo) — @everyone, Nitro Givy & Promo in our support server (₹799 / 4.5$ LTC)',
         '100% Real Members — Zero tokens/alts, maximum reach with active gamer & creator audience',
         'Payment Methods — Only INR (UPI) & LTC (Litecoin) accepted. Fast 2-hour slot deployment',
       ],
@@ -179,7 +179,7 @@ export default function ShopPage() {
         {
           url: '/shop/promo-banner.jpg',
           title: 'Official SANAM Server Promo Plans & Pricing Banner',
-          description: 'Tier 1 (3 Days - ₹1,300 / 14$ LTC) | Tier 2 (36 Hours - ₹999 / 11$ LTC) | Tier 3 (1 Day - ₹650 / 7$ LTC) | Tier 4 (1 Day - ₹400 / 4.5$ LTC). Only INR & LTC accepted.',
+          description: 'Tier 1 (3 Days - ₹2,199 / 14$ LTC) | Tier 2 (36 Hours - ₹1,799 / 11$ LTC) | Tier 3 (1 Day - ₹1,199 / 7$ LTC) | Tier 4 (1 Day - ₹799 / 4.5$ LTC). Only INR & LTC accepted.',
         },
       ],
     },
