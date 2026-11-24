@@ -1,26 +1,182 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg-main: #080808;
+  --bg-secondary: #111111;
+  --glass-card: rgba(255, 255, 255, 0.04);
+  --glass-card-hover: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-hover: rgba(255, 106, 0, 0.40);
+  --accent-primary: #FF6A00;
+  --accent-secondary: #FF8C32;
+  --text-main: #FFFFFF;
+  --text-secondary: #A1A1A1;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  selection-background-color: #FF6A00;
+  selection-color: #080808;
+}
+
+/* Custom Selection */
+::selection {
+  background: #FF6A00;
+  color: #080808;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+  background-color: #080808;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 106, 0, 0.25);
+  border-radius: 9999px;
+  border: 2px solid #080808;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 106, 0, 0.5);
+}
+
+/* Liquid Glass Cards */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45),
+              inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 106, 0, 0.35);
+  box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.55),
+              0 0 25px -4px rgba(255, 106, 0, 0.25),
+              inset 0 1px 2px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Glass Surface with Orange Edge Glow */
+.glass-panel-orange {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* Premium Orange Glow Gradient Button */
+.btn-orange-glow {
+  background: linear-gradient(135deg, #FF6A00 0%, #FF8C32 100%);
+  box-shadow: 0 0 25px rgba(255, 106, 0, 0.4),
+              inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-orange-glow:hover {
+  background: linear-gradient(135deg, #FF7B1A 0%, #FFA04D 100%);
+  box-shadow: 0 0 38px rgba(255, 106, 0, 0.65),
+              0 0 12px rgba(255, 140, 50, 0.5),
+              inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-orange-glow:active {
+  transform: translateY(0);
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.4);
+}
+
+/* Subtle Secondary Glass Button */
+.btn-glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 106, 0, 0.4);
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.2),
+              inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Discord Speaking Pulse Animation */
+@keyframes speaking-halo {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 106, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(255, 106, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 106, 0, 0);
+  }
+}
+
+.speaking-pulse {
+  animation: speaking-halo 1.6s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+/* Subtle Floating Animation */
+@keyframes soft-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-soft-float {
+  animation: soft-float 5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Orange text gradient */
+.text-orange-gradient {
+  background: linear-gradient(135deg, #FFFFFF 20%, #FF8C32 70%, #FF6A00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Performance & GPU Acceleration */
+.will-change-transform {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.content-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
 }
